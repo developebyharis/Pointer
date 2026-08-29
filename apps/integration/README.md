@@ -31,6 +31,7 @@ GITHUB_TOKEN=ghp_yourPersonalAccessTokenHere
 GITHUB_REPO=owner/repo-name
 
 # Optional — defaults shown
+GITHUB_DEFAULT_BRANCH=main
 API_HOST=localhost
 API_PORT=8000
 DB_PATH=./data/pr_doctor.json
@@ -87,11 +88,15 @@ Uses `pydantic-settings` to load config from environment variables and the `.env
 
 ```python
 class Settings(BaseSettings):
-    github_token: str   # GITHUB_TOKEN  (required)
-    github_repo:  str   # GITHUB_REPO   (required) — "owner/repo" format
-    api_host:     str   # API_HOST      (default: "localhost")
-    api_port:     int   # API_PORT      (default: 8000)
-    db_path:      str   # DB_PATH       (default: "./data/pr_doctor.json")
+    github_token:          str   # GITHUB_TOKEN           (required)
+    github_repo:           str   # GITHUB_REPO            (required) — "owner/repo" format
+    github_default_branch: str   # GITHUB_DEFAULT_BRANCH  (default: "main")
+    api_host:              str   # API_HOST               (default: "localhost")
+    api_port:              int   # API_PORT               (default: 8000)
+    db_path:               str   # DB_PATH                (default: "./data/pr_doctor.json")
+
+    # computed — not an env var
+    repo_tree_url: str  # https://github.com/{github_repo}/tree/{github_default_branch}
 ```
 
 `get_settings()` returns a module-level singleton — the `Settings` object is
@@ -298,6 +303,7 @@ ingestion.ingest_pr(pr_number, settings)
 |---|---|---|---|
 | `GITHUB_TOKEN` | ✅ | — | GitHub personal access token |
 | `GITHUB_REPO` | ✅ | — | Target repo in `owner/repo` format |
+| `GITHUB_DEFAULT_BRANCH` | ❌ | `main` | Default branch used to build the repo tree URL |
 | `API_HOST` | ❌ | `localhost` | Host the REST server binds to |
 | `API_PORT` | ❌ | `8000` | Port the REST server listens on |
 | `DB_PATH` | ❌ | `./data/pr_doctor.json` | Path to the TinyDB JSON file |
