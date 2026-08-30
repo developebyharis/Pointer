@@ -2,10 +2,11 @@
 
 from __future__ import annotations
 
-from typing import Annotated
+from typing import Annotated, Any
 
 from fastapi import Depends, FastAPI, HTTPException, Query
 from fastapi.responses import JSONResponse
+from github import Auth, Github
 
 from integration.ingestion import ingest_pr, list_open_prs
 from integration.models import PRRecord, RiskLevel
@@ -17,6 +18,7 @@ app = FastAPI(
     description="Fetch, analyse, and store GitHub PRs for pre-merge review.",
     version="0.1.0",
 )
+
 
 SettingsDep = Annotated[Settings, Depends(get_settings)]
 
